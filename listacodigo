@@ -1,0 +1,117 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#define TAM 7
+
+struct hash{
+    int chave;
+    struct hash *proximo;
+};
+
+struct hash* criaHash(struct hash* vet[]){
+    for(int i=0; i<TAM;i++){//vetor com posicao null
+        vet[i]=NULL;
+    }
+    return vet;
+}
+int hashing(int chave){
+    return chave % TAM;
+}
+int insereHash(int chave, struct hash *vet[])
+{
+    int pos = hashing(chave);
+    //printf("posicao %d valor %d \n", pos, vet[pos]->chave);
+    struct hash* novo;
+    novo = (struct hash*) malloc(sizeof(struct hash));
+    novo->proximo=vet[pos]; //inserindo
+    novo->chave = chave;
+    vet[pos]=novo;
+    return 1;
+}
+
+
+void mostraHash (struct hash* tabela[])
+{
+    struct hash* aux;
+    int i;
+    for (i=0;i < TAM;i++)
+    {
+        aux = tabela[i];
+        while (aux != NULL)
+        {
+            printf("posicao %d valor %d \n", i, aux->chave);
+            aux=aux->proximo;
+        }
+    }
+}
+
+struct hash *Buscar(struct hash* tabela[], int valor)
+{
+    int pos = hashing(valor);
+    struct hash* aux;
+    aux = tabela[pos];
+    while (aux != NULL)
+    {
+        if(aux->chave == valor)
+        {
+            printf("O elemento %d esta na lista na posicao %d \n", aux->chave, pos);
+            return aux;
+        }
+        else
+            aux=aux->proximo;
+    }
+    printf("elemento nao esta na lista \n");
+    return aux;
+
+}
+
+int main()
+{
+    struct hash *vet[TAM];
+    int op, num;
+    double start, stop, elapsed;
+    criaHash(vet);
+    do{
+        printf("Menu de opcao \n");
+        printf("Digite 1 para Inserir \n");
+        printf("Digite 2 para Buscar elemento \n");
+        printf("Digite 3 para mostrar tabela \n");
+        printf("Digite 4 para sair \n");
+        scanf("%d", &op);
+        switch (op)
+        {
+            case 1:
+                printf("Digite a quantidade de elementos a inserir \n");
+                scanf("%d", &num);
+                start = (double) clock() / CLOCKS_PER_SEC;
+                for(int i=0; i < num;i++){
+                    int v=rand();
+                    insereHash(v,vet);
+                }
+                stop = (double) clock() / CLOCKS_PER_SEC;
+                elapsed = stop - start;
+                printf("Tempo total em segundos da insercao: %f\n", elapsed);
+                break;
+            case 2:
+                printf("Digite o elementos a ser buscado \n");
+                scanf("%d", &num);
+                start = (double) clock() / CLOCKS_PER_SEC;
+                Buscar(vet, num);
+                stop = (double) clock() / CLOCKS_PER_SEC;
+                elapsed = stop - start;
+                printf("Tempo total em segundos da busca: %f\n", elapsed);
+                break;
+            case 3:
+                mostraHash(vet);
+                break;
+            case 4:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("Opcao Invalida");
+                break;
+        }
+    }while (op != 4);
+
+    return 0;
+}
