@@ -1,2 +1,2 @@
-# hash-endere-amento-aberto
+# hash-endereçamento-aberto
 implementação de tabela hash com endereçamento aberto
